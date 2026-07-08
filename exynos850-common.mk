@@ -59,7 +59,7 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service.pixel-libperfmgr
+    android.hardware.power-service.samsung
 
 # RIL
 PRODUCT_PACKAGES += \
