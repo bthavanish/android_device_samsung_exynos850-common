@@ -19,6 +19,12 @@ TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := generic
 TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a55
 
+# The Exynos 850 is a 64-bit SoC and the stock vendor image supplies both
+# arm64 and 32-bit vendor libraries.  Android 15 no longer infers this from
+# TARGET_ARCH, so declare the supported application ABIs explicitly.
+TARGET_SUPPORTS_64_BIT_APPS := true
+TARGET_SUPPORTS_32_BIT_APPS := true
+
 # Platform
 TARGET_BOARD_PLATFORM := exynos850
 TARGET_BOOTLOADER_BOARD_NAME := exynos850
@@ -57,6 +63,11 @@ BOARD_ODMIMAGE_PARTITION_SIZE := 33554432
 # Verified Boot
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
+
+# The proprietary vendor image comes from Android 13 (VNDK 33).  Declaring
+# this enables the Treble compatibility checks and gives vendor modules the
+# correct ABI surface instead of treating this as a legacy non-Treble device.
+BOARD_VNDK_VERSION := 33
 
 # SELinux
 BOARD_VENDOR_SEPOLICY_DIRS += device/samsung/exynos850-common/sepolicy/vendor
