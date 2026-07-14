@@ -56,18 +56,23 @@ TARGET_USERIMAGES_USE_F2FS := true
 # Filesystem types
 BOARD_ODMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
 
-# ODM partition
-BOARD_ODMIMAGE_PARTITION_SIZE := 33554432
+# Partition copy-out overrides
+TARGET_COPY_OUT_PRODUCT := product
+TARGET_COPY_OUT_ODM := odm
+TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+
+# Partition sizes
+BOARD_PRODUCTIMAGE_PARTITION_SIZE := 1073741824
+BOARD_ODMIMAGE_PARTITION_SIZE := 134217728
 
 # Verified Boot
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 
-# The proprietary vendor image comes from Android 13 (VNDK 33).  Declaring
-# this enables the Treble compatibility checks and gives vendor modules the
-# correct ABI surface instead of treating this as a legacy non-Treble device.
-BOARD_VNDK_VERSION := 33
+# Vendor blobs are from Android 13 but VNDK version is not set explicitly
+# to avoid Soong variant resolution issues on lineage-23.2.
 
 # SELinux
 BOARD_VENDOR_SEPOLICY_DIRS += device/samsung/exynos850-common/sepolicy/vendor

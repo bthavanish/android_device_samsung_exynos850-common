@@ -23,7 +23,7 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.5-service_64.samsung
+    android.hardware.camera.provider-service.samsung
 
 # Display
 PRODUCT_PACKAGES += \
@@ -81,6 +81,9 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi-service \
     hostapd \
     wpa_supplicant
+
+# Samsung SLSI config
+$(call inherit-product, hardware/samsung_slsi-linaro/config/config.mk)
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
