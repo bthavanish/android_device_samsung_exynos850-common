@@ -74,6 +74,13 @@ BOARD_VENDORIMAGE_PARTITION_SIZE := 234881024
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
 BOARD_AVB_ROLLBACK_INDEX := 13
+# A12s is A-only (AB_OTA_UPDATER := false); non-A/B requires a recovery AVB
+# key. Verification is disabled at flash time via a patched vbmeta, so the
+# AOSP test key is fine here.
+BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
+BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA2048
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
 
 # Vendor blobs are from Android 13 but VNDK version is not set explicitly
 # to avoid Soong variant resolution issues on lineage-23.2.
