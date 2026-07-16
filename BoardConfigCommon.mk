@@ -48,6 +48,17 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 # Dynamic partitions
 BOARD_SUPER_PARTITION_GROUPS := samsung_dynamic_partitions
 BOARD_SAMSUNG_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product odm
+# Tell first-stage mount exactly where the super block device lives so it can
+# read the LP metadata before mapping logical partitions (A-only device).
+BOARD_SUPER_PARTITION_BLOCK_DEVICE := /dev/block/bootdevice/by-name/super
+BOARD_SUPER_PARTITION_NAME := super
+BOARD_SUPER_PARTITION_SIZE := 5557452800
+# Keep LP metadata at the version first-stage understands and disable the
+# Virtual A/B snapshot path (this is a non-A/B device).
+BOARD_SUPER_PARTITION_METADATA_MAX_SIZE := 65536
+BOARD_SUPER_PARTITION_METADATA_SLOT_COUNT := 2
+TARGET_HAS_VIRTUAL_AB_OTA := false
+TARGET_HAS_VIRTUAL_AB_FEATURES := false
 
 # Filesystems
 TARGET_USERIMAGES_USE_EXT4 := true
