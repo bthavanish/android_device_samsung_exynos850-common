@@ -35,7 +35,7 @@ BOARD_KERNEL_IMAGE_NAME := Image
 TARGET_KERNEL_CLANG_COMPILE := true
 
 # Boot image common
-BOARD_BOOTIMG_HEADER_VERSION := 0
+BOARD_BOOTIMG_HEADER_VERSION := 2
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
@@ -48,6 +48,17 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 # Dynamic partitions
 BOARD_SUPER_PARTITION_GROUPS := samsung_dynamic_partitions
 BOARD_SAMSUNG_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product odm
+# Tell first-stage mount exactly where the super block device lives so it can
+# read the LP metadata before mapping logical partitions (A-only device).
+BOARD_SUPER_PARTITION_BLOCK_DEVICE := /dev/block/bootdevice/by-name/super
+BOARD_SUPER_PARTITION_NAME := super
+BOARD_SUPER_PARTITION_SIZE := 5557452800
+# Keep LP metadata at the version first-stage understands and disable the
+# Virtual A/B snapshot path (this is a non-A/B device).
+BOARD_SUPER_PARTITION_METADATA_MAX_SIZE := 65536
+BOARD_SUPER_PARTITION_METADATA_SLOT_COUNT := 2
+TARGET_HAS_VIRTUAL_AB_OTA := false
+TARGET_HAS_VIRTUAL_AB_FEATURES := false
 
 # Filesystems
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -57,19 +68,30 @@ TARGET_USERIMAGES_USE_F2FS := true
 BOARD_ODMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_PRODUCTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 
 # Partition copy-out overrides
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_ODM := odm
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+TARGET_COPY_OUT_VENDOR := vendor
 
 # Partition sizes
-BOARD_PRODUCTIMAGE_PARTITION_SIZE := 1073741824
-BOARD_ODMIMAGE_PARTITION_SIZE := 134217728
+BOARD_PRODUCTIMAGE_PARTITION_SIZE := 805306368
+BOARD_ODMIMAGE_PARTITION_SIZE := 67108864
+BOARD_VENDORIMAGE_PARTITION_SIZE := 234881024
 
 # Verified Boot
 BOARD_AVB_ENABLE := true
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
+BOARD_AVB_ROLLBACK_INDEX := 13
+# A12s is A-only (AB_OTA_UPDATER := false); non-A/B requires a recovery AVB
+# key. Verification is disabled at flash time via a patched vbmeta, so the
+# AOSP test key is fine here.
+BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
+BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA2048
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
 
 # Vendor blobs are from Android 13 but VNDK version is not set explicitly
 # to avoid Soong variant resolution issues on lineage-23.2.
